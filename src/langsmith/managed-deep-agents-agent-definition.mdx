@@ -202,40 +202,33 @@ Pass a LangChain chat model instance instead when you need to configure model pa
 
 ### Using LangSmith Gateway
 
-You can use [LangSmith Gateway](langsmith/llm-gateway) to control rate limits, fallbacks, and more.
-
-In order to use, you should:
-- Use the ChatOpenAI model directly
-- Set a base url of `https://gateway.smith.langchain.com/v1`
-- Set an environment variable of `LANGSMITH_GATEWAY_API_KEY` to be your LangSmith API key.
-
-This should look like (illustrative):
+You can use [LangSmith LLM Gateway](/langsmith/llm-gateway) to apply rate limits, fallbacks, and other policies to model calls.
 
 :::python
-```py
-import os
+Set `LANGSMITH_GATEWAY` to `true` and set `LANGSMITH_GATEWAY_API_KEY` to your LangSmith API key:
 
+```bash
+export LANGSMITH_GATEWAY="true"
+export LANGSMITH_GATEWAY_API_KEY="$LANGSMITH_API_KEY"
+```
+
+Then define the model with the standard `provider:model-name` identifier. LangChain routes supported chat models through the gateway without a custom chat model instance:
+
+```python
 from managed_deepagents import define_deep_agent
-from langchain_openai import ChatOpenAI
-
-api_key = os.environ.get(
-    "LANGSMITH_GATEWAY_API_KEY",
-    "missing-langsmith-gateway-api-key",
-)
-base_url = "https://gateway.smith.langchain.com/v1"
 
 agent = define_deep_agent(
     name="my-agent",
-    model=ChatOpenAI(
-        model="moonshotai/Kimi-K3",
-        api_key=api_key,
-        base_url=base_url,
-    ),
+    model="anthropic:claude-sonnet-4-6",
 )
 ```
+
+For gateway prerequisites, regional endpoints, and supported chat models, see [Use LangChain and Deep Agents with the LLM Gateway](/langsmith/llm-gateway-quickstart#using-langchain-and-deep-agents).
 :::
 
 :::js
+TypeScript does not support the convenience environment variables. Configure `ChatOpenAI` with the gateway URL and your LangSmith API key directly:
+
 ```ts
 import { defineDeepAgent } from "managed-deepagents";
 import { ChatOpenAI } from "@langchain/openai";
@@ -247,19 +240,19 @@ const baseURL = "https://gateway.smith.langchain.com/v1";
 export const agent = defineDeepAgent({
   name: "my-agent",
   model: new ChatOpenAI({
-    model: "moonshotai/Kimi-K3",
+    model: "moonshotai/kimi-k3",
     apiKey,
     configuration: { baseURL },
   }),
 });
 ```
-:::
 
 <Note>
-The model slug should be `provider/model-name` when using Gateway. When NOT using Gateway, it is normally `provider:model-name`
+Use a `provider/model-name` model slug when you configure the gateway directly.
 </Note>
+:::
 
-In order to scaffold your project to use Gateway from the start, you can pass a `--gateway` flag when initializing your agent:
+To scaffold a project that uses the gateway from the start, pass the `--gateway` flag when you initialize the agent:
 
 ```bash
 mda init my-agent --gateway
