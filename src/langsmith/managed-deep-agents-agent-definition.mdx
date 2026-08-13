@@ -204,31 +204,26 @@ Pass a LangChain chat model instance instead when you need to configure model pa
 
 You can use [LangSmith LLM Gateway](/langsmith/llm-gateway) to apply rate limits, fallbacks, and other policies to model calls.
 
-:::python
-Set `LANGSMITH_GATEWAY` to `true` and set `LANGSMITH_GATEWAY_API_KEY` to your LangSmith API key:
+Set `LANGSMITH_GATEWAY_API_KEY` to your LangSmith API key:
 
 ```bash
-export LANGSMITH_GATEWAY="true"
 export LANGSMITH_GATEWAY_API_KEY="$LANGSMITH_API_KEY"
 ```
 
-Then define the model with the standard `provider:model-name` identifier. LangChain routes supported chat models through the gateway without a custom chat model instance:
+:::python
+Prefix the Gateway model ID with `langsmith:`:
 
 ```python
 from managed_deepagents import define_deep_agent
 
 agent = define_deep_agent(
     name="my-agent",
-    model="anthropic:claude-sonnet-4-6",
+    model="langsmith:moonshotai/kimi-k3",
 )
 ```
-
-For gateway prerequisites, regional endpoints, and supported chat models, see [Use LangChain and Deep Agents with the LLM Gateway](/langsmith/llm-gateway-quickstart#using-langchain-and-deep-agents).
 :::
 
 :::js
-TypeScript does not support the convenience environment variables. Configure `ChatOpenAI` with the gateway URL and your LangSmith API key directly:
-
 ```ts
 import { defineDeepAgent } from "managed-deepagents";
 import { ChatOpenAI } from "@langchain/openai";
@@ -246,13 +241,9 @@ export const agent = defineDeepAgent({
   }),
 });
 ```
-
-<Note>
-Use a `provider/model-name` model slug when you configure the gateway directly.
-</Note>
 :::
 
-To scaffold a project that uses the gateway from the start, pass the `--gateway` flag when you initialize the agent:
+In order to scaffold your project to use Gateway from the start, you can pass a `--gateway` flag when initializing your agent:
 
 ```bash
 mda init my-agent --gateway
