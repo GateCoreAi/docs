@@ -210,9 +210,9 @@ Set `LANGSMITH_GATEWAY_API_KEY` to your LangSmith API key:
 export LANGSMITH_GATEWAY_API_KEY="$LANGSMITH_API_KEY"
 ```
 
-:::python
 Prefix the Gateway model ID with `langsmith:`:
 
+:::python
 ```python
 from managed_deepagents import define_deep_agent
 
@@ -226,19 +226,10 @@ agent = define_deep_agent(
 :::js
 ```ts
 import { defineDeepAgent } from "managed-deepagents";
-import { ChatOpenAI } from "@langchain/openai";
-
-const apiKey =
-  process.env.LANGSMITH_GATEWAY_API_KEY ?? "missing-langsmith-gateway-api-key";
-const baseURL = "https://gateway.smith.langchain.com/v1";
 
 export const agent = defineDeepAgent({
   name: "my-agent",
-  model: new ChatOpenAI({
-    model: "moonshotai/kimi-k3",
-    apiKey,
-    configuration: { baseURL },
-  }),
+  model: "langsmith:moonshotai/kimi-k3",
 });
 ```
 :::
