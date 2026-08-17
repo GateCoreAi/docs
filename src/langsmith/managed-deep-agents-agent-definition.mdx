@@ -204,12 +204,6 @@ Pass a LangChain chat model instance instead when you need to configure model pa
 
 You can use [LangSmith LLM Gateway](/langsmith/llm-gateway) to apply rate limits, fallbacks, and other policies to model calls.
 
-Set `LANGSMITH_GATEWAY_API_KEY` to your LangSmith API key:
-
-```bash
-export LANGSMITH_GATEWAY_API_KEY="$LANGSMITH_API_KEY"
-```
-
 Prefix the Gateway model ID with `langsmith:`:
 
 :::python
